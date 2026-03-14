@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { WardrobeItem } from '@/types';
 import { VibeBadge } from '@/components/ui/Badge';
@@ -9,12 +10,13 @@ import { cn } from '@/lib/utils';
 interface ItemCardProps {
   item: WardrobeItem;
   onDelete?: (item: WardrobeItem) => void;
+  onEdit?: boolean;
   selected?: boolean;
   onClick?: (item: WardrobeItem) => void;
   compact?: boolean;
 }
 
-export function ItemCard({ item, onDelete, selected, onClick, compact }: ItemCardProps) {
+export function ItemCard({ item, onDelete, onEdit, selected, onClick, compact }: ItemCardProps) {
   return (
     <motion.div
       layout
@@ -58,18 +60,29 @@ export function ItemCard({ item, onDelete, selected, onClick, compact }: ItemCar
         </div>
       )}
 
-      {/* Delete button */}
-      {onDelete && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete(item);
-          }}
-          className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-black/60 text-white/60 hover:text-red-400 hover:bg-black/80 transition-colors text-xs opacity-0 group-hover:opacity-100 flex items-center justify-center"
-        >
-          ✕
-        </button>
-      )}
+      {/* Action buttons */}
+      <div className="absolute top-1.5 right-1.5 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        {onEdit && (
+          <Link
+            href={`/wardrobe/${item.id}/edit`}
+            onClick={(e) => e.stopPropagation()}
+            className="w-6 h-6 rounded-full bg-black/60 text-white/60 hover:text-accent hover:bg-black/80 transition-colors text-xs flex items-center justify-center"
+          >
+            ✎
+          </Link>
+        )}
+        {onDelete && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(item);
+            }}
+            className="w-6 h-6 rounded-full bg-black/60 text-white/60 hover:text-red-400 hover:bg-black/80 transition-colors text-xs flex items-center justify-center"
+          >
+            ✕
+          </button>
+        )}
+      </div>
     </motion.div>
   );
 }

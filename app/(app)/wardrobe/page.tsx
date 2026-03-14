@@ -47,7 +47,7 @@ export default function WardrobePage() {
       </div>
 
       {/* Grid */}
-      <ItemGrid items={items} onDelete={handleDelete} />
+      <ItemGrid items={items} onDelete={handleDelete} onEdit />
     </main>
   );
 }

@@ -19,11 +19,12 @@ const CATEGORY_TABS: { label: string; value: Category | 'all' }[] = [
 interface ItemGridProps {
   items: WardrobeItem[];
   onDelete?: (item: WardrobeItem) => void;
+  onEdit?: boolean;
   selectedId?: string | null;
   onSelect?: (item: WardrobeItem) => void;
 }
 
-export function ItemGrid({ items, onDelete, selectedId, onSelect }: ItemGridProps) {
+export function ItemGrid({ items, onDelete, onEdit, selectedId, onSelect }: ItemGridProps) {
   const [activeCategory, setActiveCategory] = useState<Category | 'all'>('all');
 
   const filtered =
@@ -60,6 +61,7 @@ export function ItemGrid({ items, onDelete, selectedId, onSelect }: ItemGridProp
                 key={item.id}
                 item={item}
                 onDelete={onDelete}
+                onEdit={onEdit}
                 selected={selectedId === item.id}
                 onClick={onSelect}
               />

@@ -36,6 +36,14 @@ export async function getItems(userId: string): Promise<WardrobeItem[]> {
   return snap.docs.map((d) => ({ id: d.id, ...d.data() } as WardrobeItem));
 }
 
+export async function updateItem(
+  userId: string,
+  itemId: string,
+  data: Partial<Pick<WardrobeItem, 'name' | 'category' | 'color' | 'colorFamily' | 'vibeTags'>>
+): Promise<void> {
+  await updateDoc(doc(db, `users/${userId}/items/${itemId}`), data);
+}
+
 export async function deleteItem(userId: string, itemId: string): Promise<void> {
   await deleteDoc(doc(db, `users/${userId}/items/${itemId}`));
 }
