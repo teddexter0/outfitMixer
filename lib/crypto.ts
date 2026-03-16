@@ -45,6 +45,10 @@ export async function encryptFile(file: File, uid: string): Promise<Blob> {
 }
 
 export async function decryptUrl(encryptedUrl: string, uid: string): Promise<string> {
+  // Images uploaded before encryption was added are plain files — return as-is
+  const path = encryptedUrl.split('?')[0];
+  if (!path.endsWith('.enc')) return encryptedUrl;
+
   const key = await deriveKey(uid);
   const response = await fetch(`/api/image?url=${encodeURIComponent(encryptedUrl)}`);
   const buffer = await response.arrayBuffer();
@@ -52,6 +56,6 @@ export async function decryptUrl(encryptedUrl: string, uid: string): Promise<str
   const iv = data.slice(0, 12);
   const ciphertext = data.slice(12);
   const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ciphertext);
-  const blob = new Blob([decrypted]); // browser infers image type
+  const blob = new Blob([decrypted]);
   return URL.createObjectURL(blob);
 }
