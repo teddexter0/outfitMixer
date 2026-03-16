@@ -39,7 +39,12 @@ export default function LoginPage() {
           <Button onClick={signInWithGoogle} size="lg" className="w-full">
             Sign in with Google
           </Button>
-          <p className="text-white/20 text-xs">Private — only you can see your wardrobe</p>
+          <div className="bg-surface-2 border border-surface-3 rounded-xl px-4 py-3 text-left space-y-1">
+            <p className="text-white/60 text-xs font-medium">🔒 Your images are encrypted</p>
+            <p className="text-white/30 text-xs leading-relaxed">
+              Photos are encrypted in your browser before upload. Nobody — not even the developer — can see them in storage. Only you can decrypt and view your wardrobe.
+            </p>
+          </div>
         </div>
       </motion.div>
     </main>

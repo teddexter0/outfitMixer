@@ -1,9 +1,9 @@
 'use client';
 
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Outfit, WardrobeItem, DayOfWeek } from '@/types';
 import { cn } from '@/lib/utils';
+import { useDecryptedUrl } from '@/hooks/useDecryptedUrl';
 
 interface DaySlotProps {
   day: DayOfWeek;
@@ -22,6 +22,20 @@ const DAY_SHORT: Record<DayOfWeek, string> = {
   saturday: 'Sat',
   sunday: 'Sun',
 };
+
+function DecryptedThumb({ imageUrl, alt }: { imageUrl: string; alt: string }) {
+  const src = useDecryptedUrl(imageUrl);
+  return (
+    <div className="aspect-square rounded-lg overflow-hidden relative bg-surface-2">
+      {src ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={src} alt={alt} className="absolute inset-0 w-full h-full object-cover" />
+      ) : (
+        <div className="absolute inset-0 bg-surface-2 animate-pulse" />
+      )}
+    </div>
+  );
+}
 
 export function DaySlot({ day, outfit, itemMap, isToday, onClick }: DaySlotProps) {
   const topItem = outfit ? itemMap[outfit.items.top] : null;
@@ -54,26 +68,8 @@ export function DaySlot({ day, outfit, itemMap, isToday, onClick }: DaySlotProps
       <div className="p-2 space-y-1">
         {outfit && topItem ? (
           <>
-            <div className="aspect-square rounded-lg overflow-hidden relative bg-surface-2">
-              <Image
-                src={topItem.imageUrl}
-                alt="top"
-                fill
-                className="object-cover"
-                sizes="80px"
-              />
-            </div>
-            {bottomItem && (
-              <div className="aspect-square rounded-lg overflow-hidden relative bg-surface-2">
-                <Image
-                  src={bottomItem.imageUrl}
-                  alt="bottom"
-                  fill
-                  className="object-cover"
-                  sizes="80px"
-                />
-              </div>
-            )}
+            <DecryptedThumb imageUrl={topItem.imageUrl} alt="top" />
+            {bottomItem && <DecryptedThumb imageUrl={bottomItem.imageUrl} alt="bottom" />}
             <p className="text-[9px] text-white/30 text-center truncate">{outfit.vibeTag}</p>
           </>
         ) : (

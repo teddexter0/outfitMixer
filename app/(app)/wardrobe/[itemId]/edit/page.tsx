@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { useAuth } from '@/contexts/AuthContext';
+import { useDecryptedUrl } from '@/hooks/useDecryptedUrl';
 import { getItems, updateItem } from '@/lib/firestore';
 import { inferColorFamily } from '@/lib/colorLogic';
 import { WardrobeItem, Category, VibeTag, ColorFamily } from '@/types';
@@ -26,6 +26,7 @@ export default function EditItemPage() {
   const [vibeTags, setVibeTags] = useState<VibeTag[]>([]);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
+  const previewSrc = useDecryptedUrl(item?.imageUrl ?? '');
 
   useEffect(() => {
     if (!user) return;
@@ -87,7 +88,11 @@ export default function EditItemPage() {
 
       {/* Image preview (read-only) */}
       <div className="w-32 h-32 rounded-2xl overflow-hidden relative mx-auto bg-surface-2">
-        <Image src={item.imageUrl} alt="item" fill className="object-cover" />
+        {previewSrc
+          // eslint-disable-next-line @next/next/no-img-element
+          ? <img src={previewSrc} alt="item" className="w-full h-full object-cover" />
+          : <div className="w-full h-full animate-pulse bg-surface-3" />
+        }
       </div>
 
       {/* Name */}

@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { WardrobeItem } from '@/types';
 import { VibeBadge } from '@/components/ui/Badge';
 import { cn } from '@/lib/utils';
+import { useDecryptedUrl } from '@/hooks/useDecryptedUrl';
 
 interface ItemCardProps {
   item: WardrobeItem;
@@ -17,6 +18,7 @@ interface ItemCardProps {
 }
 
 export function ItemCard({ item, onDelete, onEdit, selected, onClick, compact }: ItemCardProps) {
+  const src = useDecryptedUrl(item.imageUrl);
   return (
     <motion.div
       layout
@@ -33,13 +35,16 @@ export function ItemCard({ item, onDelete, onEdit, selected, onClick, compact }:
     >
       {/* Image */}
       <div className={cn('relative w-full', compact ? 'aspect-[3/4]' : 'aspect-square')}>
-        <Image
-          src={item.imageUrl}
-          alt={item.name ?? item.category}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 50vw, 33vw"
-        />
+        {src ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={src}
+            alt={item.name ?? item.category}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-surface-2 animate-pulse" />
+        )}
         {selected && (
           <div className="absolute inset-0 bg-accent/10 flex items-center justify-center">
             <span className="text-2xl">✓</span>

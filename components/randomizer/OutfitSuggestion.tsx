@@ -1,7 +1,21 @@
 'use client';
 
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useDecryptedUrl } from '@/hooks/useDecryptedUrl';
+
+function DecryptedThumb({ imageUrl, alt }: { imageUrl: string; alt: string }) {
+  const src = useDecryptedUrl(imageUrl);
+  return (
+    <div className="aspect-square rounded-xl overflow-hidden bg-surface-2 relative">
+      {src ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={src} alt={alt} className="absolute inset-0 w-full h-full object-cover" />
+      ) : (
+        <div className="absolute inset-0 bg-surface-2 animate-pulse" />
+      )}
+    </div>
+  );
+}
 import { WardrobeItem } from '@/types';
 import { GeneratedOutfit } from '@/lib/randomizer';
 import { VibeBadge, FamilyBadge } from '@/components/ui/Badge';
@@ -56,15 +70,7 @@ export function OutfitSuggestion({ outfit, itemMap }: OutfitSuggestionProps) {
               animate={{ opacity: 1, scale: 1 }}
               className="flex-none w-28"
             >
-              <div className="aspect-square rounded-xl overflow-hidden bg-surface-2 relative">
-                <Image
-                  src={item.imageUrl}
-                  alt={item.name ?? slot}
-                  fill
-                  className="object-cover"
-                  sizes="112px"
-                />
-              </div>
+              <DecryptedThumb imageUrl={item.imageUrl} alt={item.name ?? slot} />
               <div className="mt-1 space-y-0.5">
                 <p className="text-[10px] text-white/40 uppercase tracking-wider">
                   {SLOT_LABELS[slot]}
