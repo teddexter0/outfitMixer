@@ -46,7 +46,7 @@ export async function encryptFile(file: File, uid: string): Promise<Blob> {
 
 export async function decryptUrl(encryptedUrl: string, uid: string): Promise<string> {
   const key = await deriveKey(uid);
-  const response = await fetch(encryptedUrl);
+  const response = await fetch(`/api/image?url=${encodeURIComponent(encryptedUrl)}`);
   const buffer = await response.arrayBuffer();
   const data = new Uint8Array(buffer);
   const iv = data.slice(0, 12);
